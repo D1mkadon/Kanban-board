@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body {
+  color: #fff;
+  background-color: #111;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+.input {
+  width: 250px;
+}
+
+.ParentColumn {
+  margin-top: 10%;
+  display: flex;
+  height: 100vh;
+}
+.column {
+  height: 100%;
+  width: calc(33% - 20px);
+  margin: 0 10px;
+}
+.ColumnTitle {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+}
+.todoTitle {
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+.item {
+  margin: 20px 0;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #00b96b;
+  color: #00b96b;
+  border-radius: 20px;
+}
+.item:hover {
+  border: 1px solid #00b96c98;
+}
