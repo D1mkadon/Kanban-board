@@ -1,15 +1,36 @@
-import { Col, Row } from "antd";
-import { Typography } from "antd";
-import ToDoItem from "./ToDoItem";
 import { useEffect, useState } from "react";
-const { Title } = Typography;
 
-const Contain = ({ data }) => {
-  const [boards, setBoards] = useState([
-    { id: 1, title: "Todo", items: data },
-    { id: 2, title: "In Progress", items: [] },
-    { id: 3, title: "Done", items: [] },
-  ]);
+export const defaultBoard = [
+  { id: 1, title: "Todo", items: [] },
+  { id: 2, title: "In Progress", items: [] },
+  { id: 3, title: "Done", items: [] },
+];
+
+const Contain = ({ activeRepo, setActiveRepo, data, setData }) => {
+  const [boards, setBoards] = useState(defaultBoard);
+
+  useEffect(() => {
+    // if (!activeRepo.boards.length) {
+    //   setActiveRepo((prevState) => (prevState ? { ...prevState } : []));
+    // }
+
+    // activeRepo.board.items.length
+
+    if (activeRepo.boards) {
+      setBoards(() => activeRepo.boards);
+    } else {
+      console.log(boards);
+      const newBoard = boards.map((board) => {
+        board.items = [];
+        if (board.title === "Todo") {
+          board.items = activeRepo.data;
+        }
+        return board;
+      });
+      setBoards(() => newBoard);
+    }
+  }, [activeRepo]);
+
   const [currentBoard, setCurrentBoard] = useState(null);
   const [currentItem, setCurrentItem] = useState(null);
   const dragOverHandler = (e) => {
@@ -40,10 +61,26 @@ const Contain = ({ data }) => {
         return b;
       })
     );
+    //
+    setData((prevData) => {
+      const index = prevData.findIndex(
+        (e) => e.repoName === activeRepo.repoName
+      );
+      prevData[index].boards = boards;
+      // const rightRepo = prevData.map((e) => {
+      //   if (e.repoName === activeRepo.repoName) {
+      //     const index = e.indexOf();
+      //   }
+      // });
+
+      return prevData;
+    });
+    console.log("data", data);
+    setActiveRepo((prevState) => ({ ...prevState, boards }));
   };
   return (
     <div className="ParentColumn">
-      {boards.map((board) => (
+      {boards?.map((board) => (
         <div
           key={board.id}
           className="column"
@@ -52,7 +89,7 @@ const Contain = ({ data }) => {
         >
           <div className="ColumnTitle">{board.title}</div>
           {board?.items
-            ? board?.items?.map((item) => (
+            ? board?.items.map((item) => (
                 <div
                   onDragOver={(e) => dragOverHandler(e)}
                   onDragLeave={(e) => onDragLeaveHandler(e)}
@@ -62,7 +99,9 @@ const Contain = ({ data }) => {
                   className="item"
                   key={item.id}
                 >
-                  <p style={{ fontWeight: "bold" }}> {item.title}</p>
+                  <p style={{ fontWeight: "bold", cursor: "grab" }}>
+                    {item.title}
+                  </p>
                   {/* <span> {item.body}</span> */}
                 </div>
               ))

@@ -1,11 +1,13 @@
 import { Button, Input } from "antd";
+import Link from "next/link";
 
-const Header = ({ getTodo, handleValue, inputValue }) => {
+const Header = ({ getTodo, handleValue, inputValue, link, owner }) => {
   return (
     <div
       style={{
         marginTop: "15px",
         display: "flex",
+        flexWrap: "wrap",
         justifyContent: "center",
         gap: "15px",
       }}
@@ -17,6 +19,9 @@ const Header = ({ getTodo, handleValue, inputValue }) => {
         placeholder="https://github.com/facebook/react"
       ></Input>
       <Button onClick={getTodo}>Load</Button>
+      {owner ? <p>Owner: {owner}</p> : null}
+
+      <Link href={link}>{link}</Link>
     </div>
   );
 };

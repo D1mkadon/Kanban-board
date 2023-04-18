@@ -1,6 +1,7 @@
 import { App, ConfigProvider } from "antd";
 import React from "react";
 import "../styles/globals.css";
+import { RecoilRoot } from "recoil";
 const MyApp = ({ Component, pageProps }) => (
   <ConfigProvider
     theme={{
@@ -19,9 +20,11 @@ const MyApp = ({ Component, pageProps }) => (
       },
     }}
   >
-    <App>
-      <Component {...pageProps} />
-    </App>
+    <RecoilRoot>
+      <App>
+        <Component {...pageProps} />
+      </App>
+    </RecoilRoot>
   </ConfigProvider>
 );
 
