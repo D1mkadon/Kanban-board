@@ -73,6 +73,7 @@ const HomePage = () => {
         repo={inputValue}
         link={currentLink}
         owner={repo}
+        activeRepo={activeRepo}
       />
       {loading ? (
         <p>loading...</p>
