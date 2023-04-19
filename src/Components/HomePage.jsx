@@ -11,19 +11,21 @@ const HomePage = () => {
   const [repo, setRepo] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [data, setData] = useState([]);
-  const [activeRepo, setActiveRepo] = useState([]);
+  const [activeRepo, setActiveRepo] = useState();
   const [currentLink, setCurrentLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(true);
 
   async function getNames() {
+    setLoading(true);
     setCurrentLink(() => inputValue);
     const splited = inputValue.replace(/\/+$/, "").split("/");
     const newOwner = splited[splited.length - 1];
     const newRepo = splited[splited.length - 2];
     const find = data.find((e) => e.repoName === newOwner);
-    if (find) {
+    if (find !== undefined) {
       setActiveRepo(find);
+      setLoading(false);
     } else {
       setOwner(newOwner);
       setRepo(newRepo);
@@ -34,7 +36,6 @@ const HomePage = () => {
       return;
     }
     async function getTodo() {
-      await getNames();
       await octokit
         .request(`GET https://api.github.com/repos/{repo}/{owner}/issues`, {
           owner,
@@ -43,17 +44,17 @@ const HomePage = () => {
         .then((e) => {
           setData((prevState) => [
             ...prevState,
-            {
+            { data: e.data, repoName: owner, userName: repo },
+          ]);
+          setActiveRepo(() => {
+            return {
               data: e.data,
               userName: repo,
               repoName: owner,
-            },
-          ]),
-            setActiveRepo({
-              data: e.data,
-              userName: repo,
-              repoName: owner,
-            });
+            };
+          });
+          console.log("activeRepo", activeRepo);
+          setLoading(false);
         });
     }
     getTodo();
@@ -62,6 +63,7 @@ const HomePage = () => {
   const handleValue = (e) => {
     setInputValue(e.target.value);
   };
+
   return (
     <>
       <Header
@@ -72,7 +74,9 @@ const HomePage = () => {
         link={currentLink}
         owner={repo}
       />
-      {data.length ? (
+      {loading ? (
+        <p>loading...</p>
+      ) : data.length ? (
         <Contain
           activeRepo={activeRepo}
           setActiveRepo={setActiveRepo}

@@ -6,30 +6,42 @@ export const defaultBoard = [
   { id: 3, title: "Done", items: [] },
 ];
 
-const Contain = ({ activeRepo, setActiveRepo, data, setData }) => {
+const Contain = ({ activeRepo, data, setData }) => {
   const [boards, setBoards] = useState(defaultBoard);
 
   useEffect(() => {
-    // if (!activeRepo.boards.length) {
-    //   setActiveRepo((prevState) => (prevState ? { ...prevState } : []));
-    // }
-
-    // activeRepo.board.items.length
-
-    if (activeRepo.boards) {
-      setBoards(() => activeRepo.boards);
+    if (activeRepo.objCopy) {
+      setBoards(() => activeRepo.objCopy);
     } else {
-      console.log(boards);
       const newBoard = boards.map((board) => {
         board.items = [];
+
         if (board.title === "Todo") {
-          board.items = activeRepo.data;
+          board.items = [...activeRepo.data];
         }
         return board;
       });
       setBoards(() => newBoard);
     }
   }, [activeRepo]);
+
+  useEffect(() => {
+    if (!data.length) {
+      return;
+    }
+    setData(
+      data.map((e) => {
+        console.log("e", e);
+        if (e.repoName !== activeRepo.repoName) {
+          return e;
+        } else {
+          let coppied = boards.map((e) => Object.assign({}, e));
+          return { ...e, objCopy: coppied };
+        }
+      })
+    );
+    console.log("data", data);
+  }, [boards]);
 
   const [currentBoard, setCurrentBoard] = useState(null);
   const [currentItem, setCurrentItem] = useState(null);
@@ -62,21 +74,6 @@ const Contain = ({ activeRepo, setActiveRepo, data, setData }) => {
       })
     );
     //
-    setData((prevData) => {
-      const index = prevData.findIndex(
-        (e) => e.repoName === activeRepo.repoName
-      );
-      prevData[index].boards = boards;
-      // const rightRepo = prevData.map((e) => {
-      //   if (e.repoName === activeRepo.repoName) {
-      //     const index = e.indexOf();
-      //   }
-      // });
-
-      return prevData;
-    });
-    console.log("data", data);
-    setActiveRepo((prevState) => ({ ...prevState, boards }));
   };
   return (
     <div className="ParentColumn">
