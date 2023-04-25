@@ -3,7 +3,7 @@ import Header from "./Header/Header";
 import { Octokit } from "octokit";
 import { useEffect, useState } from "react";
 const octokit = new Octokit({
-  auth: "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",
+  auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
 });
 
 const HomePage = () => {
